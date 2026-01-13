@@ -1,0 +1,21 @@
+﻿@model QLKYTUCXASINHVIEN.Models.Phong
+
+<div class="container mt-5">
+    <div class="card border-danger shadow">
+        <div class="card-body text-center p-5">
+            <i class="fas fa-exclamation-triangle text-danger fa-4x mb-3"></i>
+            <h2 class="text-danger">Xác nhận xóa phòng?</h2>
+            <p class="lead">Bạn có chắc chắn muốn xóa phòng <strong>@Model.SoPhong</strong> (Mã: @Model.MaPhong) không?</p>
+            <p class="text-muted small">Hành động này không thể hoàn tác nếu phòng này đang có dữ liệu liên quan.</p>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-danger btn-lg px-5 rounded-pill">Xóa Ngay</button>
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary btn-lg px-5 rounded-pill">Quay Lại</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,180 @@
+﻿@using QLKYTUCXASINHVIEN.Models
+@{
+    ViewBag.Title = "Quản lý Phòng ở";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var danhSachPhong = ViewBag.DanhSachPhong as List<Phong>;
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-primary fw-bold"><i class="fas fa-bed me-2"></i> QUẢN LÝ PHÒNG Ở</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Quay Về Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Danh sách phòng</li>
+                </ol>
+            </nav>
+        </div>
+        <div>
+            @*<a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary shadow-sm me-2">
+                <i class="fas fa-home me-1"></i> Quay về trang chủ*@
+            </a>
+            <a href="@Url.Action("Create")" class="btn btn-primary shadow-sm">
+                <i class="fas fa-plus-circle me-1"></i> Thêm phòng mới
+            </a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body bg-light rounded">
+            @using (Html.BeginForm("Index", "Phong", FormMethod.Get, new { @class = "row g-3" }))
+            {
+                <div class="col-md-5">
+                    <input type="text" name="search" class="form-control" placeholder="Tìm theo số phòng hoặc tòa nhà..." value="@Request.QueryString["search"]">
+                </div>
+                <div class="col-md-3">
+                    <select name="toaNha" class="form-select">
+                        <option value="">-- Tất cả tòa --</option>
+                        <option value="A">Tòa A</option>
+                        <option value="B">Tòa B</option>
+                        <option value="C">Tòa C</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-dark w-100"><i class="fas fa-search"></i> Tìm kiếm</button>
+                </div>
+                <div class="col-md-2">
+                    <a href="@Url.Action("Index")" class="btn btn-link">Làm mới</a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-primary text-uppercase" style="font-size: 0.85rem;">
+                    <tr>
+                        <th class="ps-4">Mã Phòng</th>
+                        <th>Vị trí</th>
+                        <th>Số Phòng</th>
+                        <th style="width: 200px;">Tình trạng chỗ</th>
+                        <th>Giá thuê</th>
+                        <th>Trạng thái</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (danhSachPhong != null && danhSachPhong.Any())
+                    {
+                        foreach (var p in danhSachPhong)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold text-dark">@p.MaPhong</td>
+                                <td><span class="badge bg-secondary">Tòa @p.ToAnha</span></td>
+                                <td class="fw-bold text-primary">Phòng @p.SoPhong</td>
+                                <td>
+                                    <div class="d-flex justify-content-between mb-1" style="font-size: 0.8rem;">
+                                        <span>Đang ở: @p.DangO/@p.SucChua</span>
+                                        <span>@(p.SucChua > 0 ? (p.DangO * 100 / p.SucChua) : 0)%</span>
+                                    </div>
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar @(p.DangO >= p.SucChua ? "bg-danger" : "bg-success") shadow-sm"
+                                             role="progressbar"
+                                             style="width: @(p.SucChua > 0 ? (double)p.DangO / p.SucChua * 100 : 0)%"></div>
+                                    </div>
+                                </td>
+                                <td class="fw-bold text-success">@String.Format("{0:N0}", p.TinhTrang)</td>
+                                <td>
+                                    @if (p.ToAnha == "Còn chỗ" || p.DangO < p.SucChua)
+                                    {
+                                        <span class="badge rounded-pill bg-success-subtle text-success border border-success px-3">
+                                            <i class="fas fa-check-circle me-1"></i> Còn chỗ
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge rounded-pill bg-danger-subtle text-danger border border-danger px-3">
+                                            <i class="fas fa-times-circle me-1"></i> Đã đầy
+                                        </span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <a href="@Url.Action("Edit", new { id = p.MaPhong })" class="btn btn-sm btn-outline-primary" title="Sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { id = p.MaPhong })" class="btn btn-sm btn-outline-danger" title="Xóa" onclick="return confirm('Bạn có chắc chắn muốn xóa phòng này?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">Không tìm thấy phòng nào phù hợp.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f4f7f6;
+    }
+
+    .table thead th {
+        border-top: none;
+        font-weight: 600;
+        padding: 15px 10px;
+    }
+
+    .table tbody td {
+        padding: 15px 10px;
+        border-bottom: 1px solid #edf2f9;
+    }
+
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .btn {
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+
+    .progress {
+        background-color: #e9ecef;
+        border-radius: 10px;
+    }
+
+    .badge {
+        font-weight: 500;
+    }
+
+    .bg-success-subtle {
+        background-color: #d1e7dd !important;
+    }
+
+    .bg-danger-subtle {
+        background-color: #f8d7da !important;
+    }
+
+    /* Làm rõ các nút hành động */
+    .btn-action {
+        opacity: 1 !important; /* Bỏ độ mờ */
+        transition: transform 0.2s;
+    }
+
+        .btn-action:hover {
+            transform: scale(1.1); /* Phóng to nhẹ khi di chuột */
+        }
+</style>

@@ -1,0 +1,95 @@
+﻿@model IEnumerable<QLKYTUCXASINHVIEN.Models.HoaDon>
+@{
+    ViewBag.Title = "Quản lý Hóa đơn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-uppercase text-primary mb-0">📋 Danh Sách Hóa Đơn</h2>
+
+        <div class="d-flex gap-2">
+            @* Nút Quay về trang chủ mới thêm *@
+            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+                <i class="fas fa-home me-2"></i>Quay Về Trang Chủ
+            </a>
+
+            <a href="@Url.Action("Create")" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                <i class="fas fa-plus me-2"></i>Tạo Hóa Đơn Mới
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card bg-success text-white shadow border-0">
+                <div class="card-body">
+                    <h6 class="text-uppercase opacity-75">Tổng Đã Thu</h6>
+                    <h3 class="fw-bold">@String.Format("{0:N0}", ViewBag.DoanhThu ?? 0) đ</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-danger text-white shadow border-0">
+                <div class="card-body">
+                    <h6 class="text-uppercase opacity-75">Còn Nợ (Chưa thu)</h6>
+                    <h3 class="fw-bold">@String.Format("{0:N0}", ViewBag.TienNo ?? 0) đ</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Mã HĐ</th>
+                        <th>Sinh Viên</th>
+                        <th>Tháng/Năm</th>
+                        <th>Số Tiền</th>
+                        <th>Trạng Thái</th>
+                        <th class="text-center">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold">#@item.MaHoaDon</td>
+                                <td>
+                                    <div class="fw-bold text-dark">@item.MaSV</div>
+                                    <small class="text-muted">Phòng: @item.MaPhong</small>
+                                </td>
+                                <td>@item.Thang/@item.Nam</td>
+                                <td class="text-primary fw-bold">@String.Format("{0:N0}", item.TongTien) đ</td>
+                                <td>
+                                    @if (item.TrangThai == "Đã thanh toán")
+                                    {
+                                        <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Đã xong</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning-subtle text-warning px-3 py-2 rounded-pill text-dark">Chờ thu</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <a href="@Url.Action("Edit", new { id = item.MaHoaDon })" class="btn btn-sm btn-light border text-primary"><i class="fas fa-edit"></i></a>
+                                    <a href="@Url.Action("Delete", new { id = item.MaHoaDon })" class="btn btn-sm btn-light border text-danger"><i class="fas fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">Chưa có dữ liệu hóa đơn.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,227 @@
+﻿@{
+    ViewBag.Title = "Quản lý Sinh viên";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Sửa dòng này: Ép kiểu về đúng Model SinhVien của bạn
+    var danhSachSinhVien = ViewBag.DanhSachSinhVien as IEnumerable<QLKYTUCXASINHVIEN.Models.SinhVien>;
+}
+
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">📋 Quản lý Sinh viên</h1>
+        <a href="@Url.Action("Create")" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Thêm sinh viên mới
+        </a>
+    </div>
+
+    <div class="d-flex justify-content-between mb-3">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Quay về trang chủ
+        </a>
+
+    </div>
+    <!-- Search và Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" placeholder="Tìm kiếm sinh viên...">
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control">
+                        <option>Tất cả trạng thái</option>
+                        <option>Đang ở</option>
+                        <option>Đã ra</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control">
+                        <option>Tất cả phòng</option>
+                        <option>A101</option>
+                        <option>A102</option>
+                        <option>B101</option>
+                        <option>B102</option>
+                        <option>C101</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-outline-primary w-100">Tìm kiếm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bảng danh sách -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Mã SV</th>
+                            <th>Họ tên</th>
+                            <th>Lớp</th>
+                            <th>Phòng</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (danhSachSinhVien != null && danhSachSinhVien.Any())
+                        {
+                            foreach (var sv in danhSachSinhVien)
+                            {
+                                <tr>
+                                    <td>@sv.MaSV</td>
+                                    <td>@sv.HoTen</td>
+                                    <td>@sv.Lop</td>
+                                    <td>
+                                        @if (sv.Phong != null)
+                                        {
+                                            <span class="badge badge-light" style="color: black !important; border: 1px solid #ccc; font-weight: bold;">
+                                                @sv.Phong.SoPhong
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Chưa xếp</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="badge @(sv.TrangThai == "Đang ở KTX" ? "bg-success" : "bg-secondary")">
+                                            @(sv.TrangThai ?? "Chưa rõ")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge @(sv.TrangThai == "Đang ở KTX" ? "bg-success" : "bg-secondary")">
+                                            @(sv.TrangThai ?? "Chưa rõ")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="@Url.Action("Edit", new { id = sv.MaSV })" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="@Url.Action("Delete", new { id = sv.MaSV })" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    <i class="fas fa-users fa-2x mb-2"></i>
+                                    <p>Chưa có dữ liệu sinh viên (Dòng: @(danhSachSinhVien == null ? "Null" : "Empty"))</p>
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phân trang -->
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled"><a class="page-link" href="#">Trước</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Sau</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Thống kê nhanh -->
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <h5>1,254</h5>
+                    <p>Tổng sinh viên</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <h5>1,210</h5>
+                    <p>Đang ở KTX</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <h5>44</h5>
+                    <p>Đã ra KTX</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <h5>94%</h5>
+                    <p>Thanh toán đúng hạn</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Thêm CSS -->
+<style>
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+
+    .badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+    }
+
+    .btn-group .btn {
+        margin-right: 5px;
+    }
+</style>
+
+<!-- Thêm JavaScript -->
+@section Scripts {
+    <script>
+        // Search functionality
+        document.querySelector('input[type="text"]').addEventListener('keyup', function (e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        // Status filter
+        document.querySelector('select').addEventListener('change', function (e) {
+            const status = e.target.value;
+            const rows = document.querySelectorAll('tbody tr');
+
+            if (status === 'Tất cả trạng thái') {
+                rows.forEach(row => row.style.display = '');
+                return;
+            }
+
+            rows.forEach(row => {
+                const rowStatus = row.querySelector('.badge').textContent;
+                row.style.display = rowStatus === status ? '' : 'none';
+            });
+        });
+
+    </script>
+
+}

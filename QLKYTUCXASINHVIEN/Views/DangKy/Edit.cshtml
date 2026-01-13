@@ -1,0 +1,40 @@
+﻿@model QLKYTUCXASINHVIEN.Models.DangKy
+
+<div class="container mt-4">
+    <div class="card shadow border-0 rounded-3">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="fas fa-edit me-2"></i>Chỉnh Sửa Đơn Đăng Ký #@Model.MaDangKy</h4>
+        </div>
+        <div class="card-body p-4">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.MaDangKy)
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold">Sinh Viên</label>
+                        @Html.DropDownList("MaSV", null, new { @class = "form-select" })
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold">Phòng</label>
+                        @Html.DropDownList("MaPhong", null, new { @class = "form-select" })
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="fw-bold">Ngày Đăng Ký</label>
+                        @Html.EditorFor(model => model.NgayDangKy, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="fw-bold">Trạng Thái</label>
+                        @Html.DropDownListFor(m => m.TrangThai, new SelectList(new[] {"Đã Duyệt" , "Chờ duyệt", "Đang ở", "Đã trả phòng" }), new { @class = "form-select" })
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-success px-4"><i class="fas fa-save"></i> Cập nhật</button>
+                    <a href="@Url.Action("Index")" class="btn btn-secondary px-4">Quay lại</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

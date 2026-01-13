@@ -1,0 +1,50 @@
+﻿@model QLKYTUCXASINHVIEN.Models.Phong
+
+@{
+    ViewBag.Title = "Chỉnh sửa phòng";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0 rounded-4">
+        <div class="card-header bg-primary text-white p-3">
+            <h4 class="mb-0"><i class="fas fa-edit me-2"></i>Chỉnh sửa thông tin phòng @Model.SoPhong</h4>
+        </div>
+        <div class="card-body p-4">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.MaPhong) @* Giữ mã phòng để update *@
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold">Số Phòng</label>
+                        @Html.EditorFor(model => model.SoPhong, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold">Tòa Nhà</label>
+                        @Html.EditorFor(model => model.ToAnha, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold">Giá Phòng</label>
+                        @Html.EditorFor(model => model.GiaThue, new { htmlAttributes = new { @class = "form-control", type = "number" } })
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold">Trạng Thái</label>
+                        @Html.DropDownListFor(model => model.TinhTrang, new SelectList(new[] { "Trống", "Đầy", "Đang sửa chữa" }), new { @class = "form-select" })
+                    </div>
+                </div>
+
+                <hr />
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success px-4 rounded-pill">
+                        <i class="fas fa-save me-1"></i> Lưu thay đổi
+                    </button>
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary px-4 rounded-pill">Quay lại</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

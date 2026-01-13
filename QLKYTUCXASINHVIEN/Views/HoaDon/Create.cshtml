@@ -1,0 +1,94 @@
+﻿@model QLKYTUCXASINHVIEN.Models.HoaDon
+@{
+    ViewBag.Title = "Tạo Hóa đơn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4" style="max-width: 800px;">
+    <div class="card bg-primary text-white shadow mb-4 border-0">
+        <div class="card-body p-4 d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="opacity-75 mb-1">Doanh Thu Hệ Thống (Đã thu)</h5>
+                @* Bảo vệ chống lỗi Null từ Controller *@
+                <h2 class="fw-bold mb-0">@String.Format("{0:N0}", ViewBag.DoanhThu ?? 0) đ</h2>
+            </div>
+
+
+            @* NÚT TRANG CHỦ Ở GÓC TRÊN (Tiện lợi) *@
+            <a href="@Url.Action("Index", "Home")" class="btn btn-light btn-sm rounded-pill px-3 shadow-sm text-primary fw-bold">
+                <i class="fas fa-home me-1"></i>Quay Về Trang Chủ
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-lg rounded-4">
+        <div class="card-header bg-white py-3">
+            <h4 class="mb-0 fw-bold text-dark">🧾 Tạo Mới Hóa Đơn</h4>
+        </div>
+        <div class="card-body p-4">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold text-secondary">Chọn Sinh Viên</label>
+                        @Html.DropDownList("MaSV", null, "-- Chọn sinh viên --", new { @class = "form-select shadow-sm border-2", required = "required" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold text-secondary">Tháng</label>
+                        <select name="Thang" class="form-select shadow-sm" required>
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i" @(i == DateTime.Now.Month ? "selected" : "")>Tháng @i</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold text-secondary">Năm</label>
+                        <input type="number" name="Nam" class="form-control shadow-sm" value="@DateTime.Now.Year" required />
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold text-secondary">Tổng tiền (VNĐ)</label>
+                        <div class="input-group shadow-sm">
+                            <span class="input-group-text bg-light text-primary fw-bold border-2">₫</span>
+                            <input type="number" name="TongTien" class="form-control border-2" placeholder="Nhập số tiền..." required />
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold text-secondary">Trạng thái thanh toán</label>
+                        <label class="form-label fw-bold text-secondary">Hạn thanh toán</label>
+                        @* Thêm ô chọn ngày tháng *@
+                        <input type="date" name="HanThanhToan" class="form-control shadow-sm border-2" required />
+                        <select name="TrangThai" class="form-select shadow-sm border-2">
+                            <option value="Chưa thanh toán" class="text-danger">❌ Chưa thanh toán</option>
+                            <option value="Đã thanh toán" class="text-success">✅ Đã thanh toán</option>
+
+                        </select>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                @* CỤM NÚT ĐIỀU HƯỚNG BÊN DƯỚI *@
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex gap-2">
+                        @* Nút quay lại danh sách hóa đơn *@
+                        <a href="@Url.Action("Index")" class="btn btn-outline-secondary px-3 shadow-sm">
+                            <i class="fas fa-arrow-left me-2"></i>Trở lại
+                        </a>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg px-5 fw-bold shadow border-0">
+                        <i class="fas fa-save me-2"></i>Lưu Hóa Đơn
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
